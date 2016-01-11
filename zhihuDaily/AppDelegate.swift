@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -109,12 +111,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      */
     func requestData(dataOfDate date:NSDate, completionHandler:(()->())?) {
         if getCalenderString(date.description) == getCalenderString(NSDate().dateByAddingTimeInterval(28800).description) {
-            request(.GET, "http://news-at.zhihu.com/api/4/news/latest").responseJSON { (_, _, resultData) -> Void in
-                guard resultData.error == nil else {
+            Alamofire.request(.GET, "http://news-at.zhihu.com/api/4/news/latest").responseJSON { response in
+                guard response.response?.statusCode == 200 else {
                     print("数据获取失败")
                     return
                 }
-                let data = JSON(resultData.value!)
+                let data = JSON(response.result.value!)
                 //取到本日文章列表数据
                 let topStoryData = data["top_stories"]
                 let contentStoryData = data["stories"]
@@ -140,12 +142,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let componentOfURL = self.getCalenderString(date.dateByAddingTimeInterval(86400).description)
             let calenderStringOfDate = self.getCalenderString(date.description)
             
-            request(.GET, "http://news.at.zhihu.com/api/4/news/before/" + componentOfURL).responseJSON { (_, _, resultData) -> Void in
-                guard resultData.error == nil else {
+            Alamofire.request(.GET, "http://news.at.zhihu.com/api/4/news/before/" + componentOfURL).responseJSON { response -> Void in
+                guard response.response?.statusCode == 200 else {
                     print("数据获取失败")
                     return
                 }
-                let data = JSON(resultData.value!)
+                let data = JSON(response.result.value!)
                 
                 //注入pastContentStory
                 let tempDateString = self.getDetailString(calenderStringOfDate) + " " + date.dayOfWeek()
@@ -172,13 +174,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       取得主题日报列表
      */
     func getThemesData() {
-        request(.GET, "http://news-at.zhihu.com/api/4/themes").responseJSON { (_, _, dataResult) -> Void in
-            guard dataResult.error == nil else {
+        Alamofire.request(.GET, "http://news-at.zhihu.com/api/4/themes").responseJSON { response in
+            guard response.response?.statusCode == 200 else {
                 print("获取数据失败")
                 return
             }
             
-            let data = JSON(dataResult.value!)["others"]
+            let data = JSON(response.result.value!)["others"]
             for i in 0 ..< data.count {
                 self.themes.append(ThemeModel(id: String(data[i]["id"]), name: data[i]["name"].string!))
             }

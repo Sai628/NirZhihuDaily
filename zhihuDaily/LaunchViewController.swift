@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
 
 class LaunchViewController: UIViewController, JSAnimatedImagesViewDataSource {
 
@@ -20,21 +22,21 @@ class LaunchViewController: UIViewController, JSAnimatedImagesViewDataSource {
         text.text = NSUserDefaults.standardUserDefaults().objectForKey(Keys.launchTextKey) as? String
         
         //下载下一次所需的启动页数据
-        request(.GET, "http://news-at.zhihu.com/api/4/start-image/1080*1776").responseJSON { (_, _, dataResult) -> Void in
-            guard dataResult.error == nil else {
+        Alamofire.request(.GET, "http://news-at.zhihu.com/api/4/start-image/1080*1776").responseJSON { response in
+            guard response.response?.statusCode == 200 else {
                 print("获取数据失败")
                 return
             }
             
             //拿到text并保存
-            let text = JSON(dataResult.value!)["text"].string!
+            let text = JSON(response.result.value!)["text"].string!
             self.text.text = text
             NSUserDefaults.standardUserDefaults().setObject(text, forKey: Keys.launchTextKey)
             
             //拿到图像URL后取出图像并保存
-            let launchImageURL = JSON(dataResult.value!)["img"].string!
-            request(.GET, launchImageURL).responseData({ (_, _, imgResult) -> Void in
-                let imgData = imgResult.value!
+            let launchImageURL = JSON(response.result.value!)["img"].string!
+            request(.GET, launchImageURL).responseData({ response in
+                let imgData = response.result.value!
                 NSUserDefaults.standardUserDefaults().setObject(imgData, forKey: Keys.launchImgKey)
             })
         }

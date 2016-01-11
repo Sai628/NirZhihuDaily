@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
 
 class WebViewController: UIViewController, UIScrollViewDelegate, ParallaxHeaderViewDelegate, UIGestureRecognizerDelegate {
 
@@ -179,19 +181,19 @@ class WebViewController: UIViewController, UIScrollViewDelegate, ParallaxHeaderV
     //加载WebView
     func loadWebView(id: String) {
         //获取网络数据，包括body css image image_source title
-        request(.GET, "http://news-at.zhihu.com/api/4/news/" + id).responseJSON { (_, _, dataResult) -> Void in
-            guard dataResult.error == nil else {
+        Alamofire.request(.GET, "http://news-at.zhihu.com/api/4/news/" + id).responseJSON { response in
+            guard response.response?.statusCode == 200 else {
                 print("获取数据失败")
                 return
             }
-            print(dataResult.value!)
+            print(response.result.value!)
             //若body存在 拼接body与css后加载
-            if let body = JSON(dataResult.value!)["body"].string {
-                let css = JSON(dataResult.value!)["css"][0].string!
+            if let body = JSON(response.result.value!)["body"].string {
+                let css = JSON(response.result.value!)["css"][0].string!
                 
-                if let image = JSON(dataResult.value!)["image"].string {
-                    if let titleString = JSON(dataResult.value!)["title"].string {
-                        if let imageSource = JSON(dataResult.value!)["image_source"].string {
+                if let image = JSON(response.result.value!)["image"].string {
+                    if let titleString = JSON(response.result.value!)["title"].string {
+                        if let imageSource = JSON(response.result.value!)["image_source"].string {
                             self.loadParallaxHeader(image, imageSource: imageSource, titleString: titleString)
                         } else {
                             self.loadParallaxHeader(image, imageSource: "(null)", titleString: titleString)
@@ -223,7 +225,7 @@ class WebViewController: UIViewController, UIScrollViewDelegate, ParallaxHeaderV
                 self.statusBarBackground.backgroundColor = UIColor.whiteColor()
                 self.loadNormalHeader()
                 
-                let url = JSON(dataResult.value!)["share_url"].string!
+                let url = JSON(response.result.value!)["share_url"].string!
                 self.webView.loadRequest(NSURLRequest(URL: NSURL(string: url)!))
             }
         }

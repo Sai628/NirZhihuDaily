@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
 
 class ThemeViewController: UIViewController {
     
@@ -101,12 +103,12 @@ class ThemeViewController: UIViewController {
         navTitleLabel.text = name
         
         //获取数据
-        request(.GET, "http://news-at.zhihu.com/api/4/theme/" + id).responseJSON { (_, _, dataResult) -> Void in
-            guard dataResult.error == nil else {
+        Alamofire.request(.GET, "http://news-at.zhihu.com/api/4/theme/" + id).responseJSON { response in
+            guard response.response?.statusCode == 200 else {
                 print("数据获取失败")
                 return
             }
-            let data = JSON(dataResult.value!)
+            let data = JSON(response.result.value!)
             
             //取得Story
             let storyData = data["stories"]
