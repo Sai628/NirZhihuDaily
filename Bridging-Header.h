@@ -20,5 +20,6 @@
 #import "ZFModalTransitionAnimator.h"
 #import "PNChart.h"
 #import "UIImageView+WebCache.h"
+#import "UIImage+ImageEffects.h"
 
 #endif /* Bridging_Header_h */
