@@ -35,7 +35,7 @@ class LaunchViewController: UIViewController, JSAnimatedImagesViewDataSource {
             
             //拿到图像URL后取出图像并保存
             let launchImageURL = JSON(response.result.value!)["img"].string!
-            request(.GET, launchImageURL).responseData({ response in
+            Alamofire.request(.GET, launchImageURL).responseData({ response in
                 let imgData = response.result.value!
                 NSUserDefaults.standardUserDefaults().setObject(imgData, forKey: Keys.launchImgKey)
             })

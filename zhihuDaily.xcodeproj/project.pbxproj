@@ -270,7 +270,6 @@
 				32F9FF271C44C50A00E65F43 /* Views */,
 				32F9FEA91C44C50A00E65F43 /* Controllers */,
 				32F9FF7E1C44C8BF00E65F43 /* Extensions */,
-				32F9FF261C44C50A00E65F43 /* Utils */,
 				32F9FEB11C44C50A00E65F43 /* Libs */,
 				32F9FF8D1C44CACB00E65F43 /* Launch Screen.storyboard */,
 				32F9FF8E1C44CACB00E65F43 /* Main.storyboard */,
@@ -509,13 +508,6 @@
 				32F9FF231C44C50A00E65F43 /* StoryModel.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		32F9FF261C44C50A00E65F43 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Utils;
 			sourceTree = "<group>";
 		};
 		32F9FF271C44C50A00E65F43 /* Views */ = {
