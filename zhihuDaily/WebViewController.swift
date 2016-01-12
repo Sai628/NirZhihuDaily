@@ -186,7 +186,7 @@ class WebViewController: UIViewController, UIScrollViewDelegate, ParallaxHeaderV
                 print("获取数据失败")
                 return
             }
-            print(response.result.value!)
+            
             //若body存在 拼接body与css后加载
             if let body = JSON(response.result.value!)["body"].string {
                 let css = JSON(response.result.value!)["css"][0].string!
